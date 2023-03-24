@@ -1,2 +1,10 @@
 # MVP
-Email Validation Software
+The code is a Flask web application that takes an Excel file as input and checks whether the email addresses listed in the file are valid or not. The application extracts the email address and source link from each row of the Excel file, and then checks if the "@" symbol is present in the HTML or PDF content of the source link. If it is, the email address is considered valid; otherwise, it is considered invalid.
+
+The application generates a new Excel file with an additional column indicating whether the email address is valid or not and the response type for each source link. The application also provides a summary of the results, including the total number of rows in the Excel file, the number of valid email addresses, the number of invalid email addresses, and the number of request errors.
+
+The application uses various Python libraries, including Flask, pandas, requests, werkzeug, os, random, fake_useragent, tqdm, bs4, and fitz. These libraries are used to implement different functionalities of the application, such as file upload, data manipulation, web scraping, and PDF processing.
+
+The application is structured as a Flask application, with a single route ("/") that handles both GET and POST requests. The route checks if the HTTP method is POST and whether the uploaded file has the correct file type. It then reads the Excel file using pandas and iterates over each row, extracting the email address and source link from the respective columns. If either of these values is missing, the application skips to the next row. Otherwise, it makes a GET request to the source link, extracts the text from the HTML or PDF file, and checks if the "@" symbol is present in the extracted text. If it is, the email address is considered valid; otherwise, it is considered invalid.
+
+The application adds two new columns to the DataFrame representing the Excel file, indicating whether the email address is valid or not and the response type for each source link. The DataFrame is then saved to a new Excel file. Finally, the application provides a summary of the results and allows the user to download the newly generated Excel file.
