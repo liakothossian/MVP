@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Email Validation Summary</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Popper JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <style>
+        body {
+			background-color: #f2f2f2;
+			color: #333;
+			font-family: Arial, sans-serif;
+			font-size: 16px;
+		}
+
+		.navbar {
+			background-color: #222;
+			border-radius: 0;
+			margin-bottom: 20px;
+		}
+
+		.navbar-brand {
+			font-size: 24px;
+			font-weight: bold;
+		}
+
+		.navbar-nav .nav-link {
+			color: #fff;
+			font-size: 18px;
+		}
+
+		.navbar-nav .nav-link:hover {
+			background-color: #ccc;
+			color: #333;
+		}
+
+		h2 {
+			font-size: 36px;
+			font-weight: bold;
+			margin-top: 20px;
+			margin-bottom: 20px;
+		}
+
+		h4 {
+			font-size: 24px;
+			font-weight: bold;
+			margin-top: 20px;
+			margin-bottom: 10px;
+		}
+
+		p {
+			font-size: 18px;
+			margin-top: 0;
+			margin-bottom: 20px;
+		}
+
+		.col-md-4:hover {
+			background-color: #ccc;
+			color: #333;
+			cursor: pointer;
+			box-shadow: 0 0 10px rgba(0,0,0,0.5);
+			transition: all 0.3s ease-in-out;
+		}
+
+		.container-fluid {
+			background-color: #fff;
+			padding: 20px;
+			box-shadow: 0 0 10px rgba(0,0,0,0.5);
+			border-radius: 10px;
+		}
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">Email Validation</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('myform') }}">Upload File</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('download_file') }}">Download Output</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container-fluid mt-4">
+        <h2>Email Validation Summary</h2>
+        <div class="row">
+            <div class="col-md-4">
+                <h4>Total Email Validated:</h4>
+                <p>{{ summary["valid_emails"] }}</p>
+            </div>
+            <div class="col-md-4">
+                <h4>Total Email Not Validated:</h4>
+                <p>{{ summary["invalid_emails"] }}</p>
+            </div>
+            <div class="col-md-4">
+                <h4>Total Number of Errors:</h4>
+                <p>{{ summary["request_errors"] }}</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
