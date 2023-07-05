@@ -1,33 +1,16 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, send_from_directory
+from flask import Flask, render_template, request, redirect, flash, send_from_directory
 import pandas as pd
 import requests
-import requests.exceptions
 from werkzeug.utils import secure_filename
 import os
-import random
 from fake_useragent import UserAgent
-from tqdm import tqdm
 from bs4 import BeautifulSoup
-import fitz
-
+from tqdm import tqdm
+import warnings
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = './'
-
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ['xlsx', 'xls']
-
-def extract_text_from_pdf(url):
-    try:
-        headers = {'User-Agent': UserAgent().random}
-        r = requests.get(url, headers=headers)
-        with fitz.open(stream=r.content, filetype="pdf") as doc:
-            text = ""
-            for page in doc:
-                text += page.get_text()
-            return text
-    except:
-        return ""
-
 @app.route('/', methods=['GET', 'POST'])
 def myform():
     if request.method == 'POST':
@@ -43,35 +26,37 @@ def myform():
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             df = pd.read_excel(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             responsess = []
-            mail_validation = []
+            mail_validation = {}
             ua = UserAgent()
-
-            for i in tqdm(range(len(df))):
-                email = str(df['DirectEmail'][i])
-                link = df['Source'][i]
+            for i, row in tqdm(df.iterrows(), total=len(df)):
+                email = str(row['DirectEmail'])
+                link = row['Source']
                 if pd.isna(email) or pd.isna(link):
-                    mail_validation.append(0)
+                    mail_validation[i] = 0
                     responsess.append('')
                     continue
+                headers = {'User-Agent': ua.random}
+                response = requests.get(link, headers=headers)
                 try:
-                    if link.endswith('.pdf'):
-                        text = extract_text_from_pdf(link)
+                    response.raise_for_status()
+                    if response.status_code == 404:
+                        mail_validation[i] = 0
                     else:
-                        headers = {'User-Agent': ua.random}
-                        response = requests.get(link, headers=headers)
-                        soup = BeautifulSoup(response.content, 'html.parser')
+                        with warnings.catch_warnings():
+                            warnings.filterwarnings("ignore", category=Warning)
+                            soup = BeautifulSoup(response.content, 'html5lib')
                         text = soup.get_text()
-                    if '@' in text:
-                        mail_validation.append(1)
-                    else:
-                        mail_validation.append(0)
+                        if '@' in text:
+                            mail_validation[i] = 1
+                        else:
+                            mail_validation[i] = 0
                     responsess.append(response)
                 except requests.exceptions.RequestException:
+                    mail_validation[i] = -1
                     responsess.append("Request Error")
-                    mail_validation.append(-1)
 
-            df["valid_email"] = mail_validation
-            df["Response_Type"] = responsess
+            df["valid_email"] = pd.Series(mail_validation)
+            df["Response_Type"] = pd.Series(responsess)
             filename1 = 'Outputfile.xlsx'
             df.to_excel(filename1)
             summary = {
