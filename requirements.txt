@@ -7,3 +7,4 @@ beautifulsoup4==4.9.3
 html5lib==1.1
 tqdm==4.62.1
 gunicorn==20.1.0
+openpyxl==3.0.9
