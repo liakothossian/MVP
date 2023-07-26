@@ -10,7 +10,6 @@ from tqdm import tqdm
 import warnings
 import uuid
 from pathlib import Path
-from datetime import datetime
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = str(
@@ -96,9 +95,7 @@ def myform():
            ["Email Couldn't Validated",
             len(df.loc[df['valid_email'] == 0])],
            ["No of Errors",
-            len(df.loc[df['valid_email'] == -1])],
-           ["Time", datetime.now().strftime("%H:%M:%S")]
-           ],  # Updated format to show only time
+            len(df.loc[df['valid_email'] == -1])]],
           columns=["Summary", "Value"])
 
         # Write the summary DataFrame to a new sheet called "Summary"
