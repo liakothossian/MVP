@@ -93,7 +93,8 @@
                     <a class="nav-link" href="{{ url_for('myform') }}">Upload File</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('download_file') }}">Download Output</a>
+                    <a class="nav-link" href="{{ url_for('download_file', filename=summary['filename']) }}">Download Output</a>
+
                 </li>
             </ul>
         </div>
